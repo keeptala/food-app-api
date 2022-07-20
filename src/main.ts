@@ -29,7 +29,7 @@ App.use('/api/v1/products',TokenMiddleware,productsRoutes)
 App.use('/api/v1/orders',TokenMiddleware,orderRoutes)
 App.use('/api/v1/payment',TokenMiddleware,payment)
 
-App.listen(5000, () => {
+App.listen(process.env.PORT || 5000, () => {
   // tslint:disable-next-line:no-console
-  console.log(`server started at http://localhost:${5000}`);
+  console.log(`server started at http://localhost:${process.env.PORT || 5000}`);
 });
