@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+model Customer {
+  id           Int      @id @default(autoincrement())
+  username     String   @db.VarChar(255)
+  phoneNumber  String   @db.VarChar(255)
+  password     String   @db.VarChar(255)
+  salt         String   @db.VarChar(255)
+  refreshToken String   @db.VarChar(255)
+  deviceToken  String   @db.VarChar(255)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  orders       orders[]
+}
+
+model Admin {
+  id          Int      @id @default(autoincrement())
+  firstName   String   @db.VarChar(255)
+  lastName    String   @db.VarChar(255)
+  userName    String   @db.VarChar(255)
+  phoneNumber String   @db.VarChar(255)
+  password    String   @db.VarChar(255)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum ProductsStaus {
+  out_of_stock
+  in_stock
+  running_low
+}
+
+model Products {
+  id         Int           @id @default(autoincrement())
+  name       String        @db.VarChar(255)
+  price      Int
+  imageUrl   String        @db.VarChar(255)
+  status     ProductsStaus
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  orderItems orderItems[]
+}
+
+enum orderStatus {
+  received
+  processed
+  complete
+  canceled
+}
+
+model orders {
+  id         Int          @id @default(autoincrement())
+  customer   Customer     @relation(fields: [customerId], references: [id])
+  customerId Int
+  orderItems orderItems[]
+  status     orderStatus
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+}
+
+model orderItems {
+  id        Int      @id @default(autoincrement())
+  order     orders   @relation(fields: [orderId], references: [id])
+  orderId   Int
+  product   Products @relation(fields: [productId], references: [id])
+  productId Int
+  quantity  Int      @default(1)
+}
