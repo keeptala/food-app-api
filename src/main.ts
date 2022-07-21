@@ -6,9 +6,9 @@ import {config} from 'dotenv'
 import userRoutes from "./routes/user";
 import health from "./routes/health";
 import productsRoutes from "./routes/products";
-import { TokenMiddleware } from "./utils/middlewares";
+import { notFound, TokenMiddleware,errorHandler } from "./utils/middlewares";
 import orderRoutes from "./routes/order";
-import payment from "./routes/payment";
+import PaymentRoutes from "./routes/mpesa";
 
 config(); 
 
@@ -27,7 +27,10 @@ App.use('/health',health)
 App.use('/api/v1/auth/',userRoutes)
 App.use('/api/v1/products',TokenMiddleware,productsRoutes)
 App.use('/api/v1/orders',TokenMiddleware,orderRoutes)
-App.use('/api/v1/payment',TokenMiddleware,payment)
+App.use('/api/v1/payments/',TokenMiddleware,PaymentRoutes)
+
+App.use(notFound);
+App.use(errorHandler);
 
 App.listen(process.env.PORT || 5000, () => {
   // tslint:disable-next-line:no-console

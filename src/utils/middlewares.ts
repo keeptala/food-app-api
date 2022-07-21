@@ -41,9 +41,9 @@ export const TokenMiddleware = (
   };
   
   export function notFound(
-    req: { originalUrl: any },
-    res: { status: (arg0: number) => void },
-    next: (arg0: Error) => void
+    req,
+    res,
+    next
   ) {
     const error = new Error(`Not found - ${req.originalUrl}`);
     res.status(404);
@@ -52,18 +52,9 @@ export const TokenMiddleware = (
   
   // eslint-disable-next-line no-unused-vars
   export function errorHandler(
-    error: { name: string | number; message: any; stack: any; errors: any },
+    error,
     _req: any,
-    res: {
-      statusCode: number;
-      status: (arg0: any) => void;
-      json: (arg0: {
-        status: any;
-        message: any;
-        stack: any;
-        errors: any;
-      }) => void;
-    },
+    res,
     _next: any
   ) {
     const statusCode =
